@@ -10,14 +10,26 @@ using SalesApi.Models;
 
 namespace SalesApi.Repository
 {
+    /// <summary>
+    /// Repository for handling Order related operations.
+    /// </summary>
     public class OrderRepository : IOrderRepository
     {
         private readonly SalesDbContext _context;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OrderRepository"/> class.
+        /// </summary>
+        /// <param name="context">The database context.</param>
         public OrderRepository(SalesDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Gets all orders based on the provided query.
+        /// </summary>
+        /// <param name="query">The query parameters for filtering orders.</param>
+        /// <returns>A list of orders.</returns>
         public async Task<List<OrderDto>> GetAllAsync(OrderQueryObject query)
         {
             var products = _context.Product.AsQueryable();
@@ -72,6 +84,11 @@ namespace SalesApi.Repository
             return await result.Take(query.PageSize).ToListAsync();
         }
 
+        /// <summary>
+        /// Gets the order by product code.
+        /// </summary>
+        /// <param name="productCode">The product code.</param>
+        /// <returns>The order associated with the product code.</returns>
         public async Task<OrderDto?> GetByProductCodeAsync(string productCode)
         {
             var products = await _context.Product.ToListAsync();
@@ -101,6 +118,10 @@ namespace SalesApi.Repository
             return result.FirstOrDefault(r => r.ProductCode == productCode);
         }
 
+        /// <summary>
+        /// Uploads the order data from a csv file.
+        /// </summary>
+        /// <param name="file">The csv file containing order data.</param>
         public async Task UploadOrderAsync(IFormFile file)
         {
             using (var reader = new StreamReader(file.OpenReadStream()))

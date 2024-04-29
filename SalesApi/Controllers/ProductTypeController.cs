@@ -10,15 +10,28 @@ using SalesApi.Mappers;
 
 namespace SalesApi.Controllers
 {
+    /// <summary>
+    /// Controller for handling Product Type related requests.
+    /// </summary>
     [ApiController]
     [Route("api/product/types")]
     public class ProductTypeController : ControllerBase
     {
         private readonly IProductTypeRepository _productTypeRepo;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductTypeController"/> class.
+        /// </summary>
+        /// <param name="productTypeRepository">The product type repository.</param>
         public ProductTypeController(IProductTypeRepository productTypeRepository)
         {
             _productTypeRepo = productTypeRepository;
         }
+
+        /// <summary>
+        /// Gets all product types.
+        /// </summary>
+        /// <param name="query">The query parameters for filtering product types.</param>
+        /// <returns>A list of product types.</returns>
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] ProductTypeQueryObject query)
@@ -31,6 +44,11 @@ namespace SalesApi.Controllers
             return Ok(products);
         }
 
+        /// <summary>
+        /// Gets the product type by id.
+        /// </summary>
+        /// <param name="id">The product type id.</param>
+        /// <returns>The product type associated with the id.</returns>
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IActionResult> GetProductTypeBydId([FromRoute] int id)
@@ -43,6 +61,11 @@ namespace SalesApi.Controllers
             return Ok(productTypes);
         }
 
+        /// <summary>
+        /// Creates a new product type.
+        /// </summary>
+        /// <param name="productTypeDto">The product type data transfer object.</param>
+        /// <returns>The created product type.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateProductType([FromBody] CreateProductTypeRequestDto productTypeDto)
         {
@@ -56,6 +79,11 @@ namespace SalesApi.Controllers
             return CreatedAtAction(nameof(GetProductTypeBydId), new { id = productTypeModel.Id }, productTypeModel.ToProductTypeDto());
         }
 
+        /// <summary>
+        /// Import the product type file for processing.
+        /// </summary>
+        /// <param name="file">The csv file containing product type data.</param>
+        /// <returns>A response indicating the result of the file processing.</returns>
         [HttpPost("import")]
         public async Task<IActionResult> PostProductType(IFormFile file)
         {
@@ -73,6 +101,12 @@ namespace SalesApi.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates a product type.
+        /// </summary>
+        /// <param name="id">The product type id.</param>
+        /// <param name="productTypeDto">The product type data transfer object.</param>
+        /// <returns>The updated product type.</returns>
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> UpdateProductType([FromRoute] int id, [FromBody] UpdateProductTypeRequestDto productTypeDto)
@@ -90,6 +124,12 @@ namespace SalesApi.Controllers
             return CreatedAtAction(nameof(GetProductTypeBydId), new { id = productTypeModel.Id }, productTypeModel.ToProductTypeDto());
         }
 
+
+        /// <summary>
+        /// Deletes a product type.
+        /// </summary>
+        /// <param name="id">The product type id.</param>
+        /// <returns>A response indicating the result of the deletion.</returns>
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteProductType([FromRoute] int id)

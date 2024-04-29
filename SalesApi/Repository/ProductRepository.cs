@@ -10,15 +10,27 @@ using SalesApi.Models;
 
 namespace SalesApi.Repository
 {
+    /// <summary>
+    /// Repository for handling Product related operations.
+    /// </summary>
     public class ProductRepository : IProductRepository
     {
         private readonly SalesDbContext _context;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductRepository"/> class.
+        /// </summary>
+        /// <param name="context">The database context.</param>
 
         public ProductRepository(SalesDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Creates a new product.
+        /// </summary>
+        /// <param name="productModel">The product model.</param>
+        /// <returns>The created product.</returns>
         public async Task<Product> CreateProductAsync(Product productModel)
         {
             await _context.Product.AddAsync(productModel);
@@ -26,6 +38,11 @@ namespace SalesApi.Repository
             return productModel;
         }
 
+        /// <summary>
+        /// Gets all products based on the provided query.
+        /// </summary>
+        /// <param name="query">The query parameters for filtering products.</param>
+        /// <returns>A list of products.</returns>
         public async Task<List<ProductDto>> GetAllAsync(ProductQueryObject query)
         {
             var products = _context.Product.AsQueryable();
@@ -74,6 +91,11 @@ namespace SalesApi.Repository
             return await result.ToListAsync();
         }
 
+        /// <summary>
+        /// Gets the product by id.
+        /// </summary>
+        /// <param name="id">The product id.</param>
+        /// <returns>The product associated with the id.</returns>
         public async Task<ProductDto?> GetByIdAsync(int id)
         {
             var products = await _context.Product.ToListAsync();
@@ -97,6 +119,10 @@ namespace SalesApi.Repository
             return result.FirstOrDefault(r => r.Id == id);
         }
 
+        /// <summary>
+        /// Uploads the product data from a csv file.
+        /// </summary>
+        /// <param name="file">The csv file containing product data.</param>
         public async Task UploadProductAsync(IFormFile file)
         {
             using (var reader = new StreamReader(file.OpenReadStream()))
